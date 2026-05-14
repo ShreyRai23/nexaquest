@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
-import { useRoleGuard } from "@/lib/role";
 import { Download, Award, Sparkles, Brain, Palette, Rocket, Crown, Microscope, Code2, Lightbulb } from "lucide-react";
 
 export const Route = createFileRoute("/report")({

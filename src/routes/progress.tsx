@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
-import { useRoleGuard } from "@/lib/role";
 
 export const Route = createFileRoute("/progress")({
   head: () => ({ meta: [{ title: "Progress — MindBloom AI" }, { name: "description", content: "Your skill map and growth journey." }] }),
