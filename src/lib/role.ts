@@ -15,8 +15,8 @@ export function setRole(r: Role) {
   if (typeof window !== "undefined") window.dispatchEvent(new Event("mb-role-change"));
 }
 
-export function useRole(): Role {
-  const [role, set] = useState<Role>("child");
+export function useRole(): Role | null {
+  const [role, set] = useState<Role | null>(null);
   useEffect(() => {
     set(getRole());
     const h = () => set(getRole());
@@ -35,7 +35,7 @@ export function useRoleGuard(allowed: Role) {
   const role = useRole();
   const navigate = useNavigate();
   useEffect(() => {
-    if (role !== allowed) {
+    if (role !== null && role !== allowed) {
       navigate({ to: allowed === "child" ? "/parent" : "/dashboard" });
     }
   }, [role, allowed, navigate]);
