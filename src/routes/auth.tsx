@@ -60,15 +60,15 @@ function Auth() {
             </div>
           </div>
 
-          <form className="space-y-3 mt-5" onSubmit={(e)=>e.preventDefault()}>
+          <form className="space-y-3 mt-5" onSubmit={enter}>
             {mode==="up" && (
               <Field icon={User} label="Hero name" placeholder="e.g. PixelFox"/>
             )}
             <Field icon={Mail} label="Email" placeholder="hero@mindbloom.ai" type="email"/>
             <Field icon={Lock} label="Password" placeholder="••••••••" type="password"/>
-            <Link to="/dashboard" className="btn-game orange w-full">
-              <Sparkles size={16}/> {mode==="in"?"Enter Academy":"Begin Adventure"}
-            </Link>
+            <button type="submit" className="btn-game orange w-full">
+              <Sparkles size={16}/> {mode==="in"?(role==="parent"?"Enter Parent Center":"Enter Academy"):(role==="parent"?"Create Parent Account":"Begin Adventure")}
+            </button>
           </form>
 
           <div className="mt-4 text-center text-xs text-[color:var(--ink)]/60">
