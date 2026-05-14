@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Navbar } from "@/components/Navbar";
+import { RoleNavbar } from "@/components/RoleNavbar";
+import { useRoleGuard } from "@/lib/role";
 import { Star } from "lucide-react";
 
 export const Route = createFileRoute("/games")({
@@ -21,7 +22,7 @@ const games = [
 function Games() {
   return (
     <div className="min-h-screen bg-dots">
-      <Navbar />
+      <RoleNavbar />
       <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
         <div className="pixel-card-flat bg-[color:var(--orange-pop)] text-white p-8">
           <div className="font-pixel text-[10px] text-[color:var(--sunny)]">ARCADE</div>

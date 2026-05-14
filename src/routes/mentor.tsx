@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Navbar } from "@/components/Navbar";
+import { RoleNavbar } from "@/components/RoleNavbar";
+import { useRoleGuard } from "@/lib/role";
 import { useState } from "react";
 import { Send, Mic, Smile, Sparkles } from "lucide-react";
 
@@ -26,7 +27,7 @@ function Mentor() {
 
   return (
     <div className="min-h-screen bg-dots">
-      <Navbar />
+      <RoleNavbar />
       <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* Quest log sidebar */}
         <aside className="pixel-card-flat bg-[color:var(--ink)] text-[color:var(--cream)] p-4">

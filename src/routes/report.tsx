@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Navbar } from "@/components/Navbar";
+import { RoleNavbar } from "@/components/RoleNavbar";
+import { useRoleGuard } from "@/lib/role";
 import { Download, Award, Sparkles, Brain, Palette, Rocket, Crown, Microscope, Code2, Lightbulb } from "lucide-react";
 
 export const Route = createFileRoute("/report")({
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/report")({
 function Report() {
   return (
     <div className="min-h-screen bg-dots">
-      <Navbar />
+      <RoleNavbar />
       <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
         {/* Header */}
         <div className="pixel-card-flat bg-[color:var(--sky-pop)] p-6 flex flex-wrap items-center gap-5">
