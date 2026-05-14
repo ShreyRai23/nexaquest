@@ -20,25 +20,25 @@ export function ChildNavbar() {
   };
   return (
     <header className="sticky top-3 z-50 px-3 sm:px-6">
-      <nav className="mx-auto max-w-7xl pixel-card-flat flex items-center justify-between gap-3 px-3 py-2"
+      <nav className="mx-auto max-w-7xl pixel-card-flat flex items-center gap-3 px-3 py-2 overflow-hidden"
         style={{ background: "var(--ink)", color: "var(--cream)" }}>
-        <Link to="/dashboard" className="flex items-center gap-2 pl-1">
+        <Link to="/dashboard" className="flex items-center gap-2 pl-1 shrink-0">
           <div className="grid h-9 w-9 place-items-center rounded-lg border-4 border-[color:var(--ink)] bg-[color:var(--grass)]">
             <span className="font-pixel text-[10px]">MB</span>
           </div>
-          <div className="leading-tight">
+          <div className="leading-tight hidden sm:block">
             <div className="font-pixel text-[12px] text-[color:var(--sunny)]">MINDBLOOM</div>
             <div className="text-[10px] text-[color:var(--teal-pop)]">● Hero Mode</div>
           </div>
         </Link>
-        <ul className="hidden lg:flex items-center gap-1">
+        <ul className="hidden lg:flex items-center gap-1 flex-1 min-w-0 justify-center flex-wrap">
           {items.map(({ to, label, icon: Icon }) => {
             const active = loc.pathname === to;
             return (
               <li key={to}>
                 <Link
                   to={to}
-                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold transition ${
+                  className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-sm font-bold transition whitespace-nowrap ${
                     active
                       ? "bg-[color:var(--sunny)] text-[color:var(--ink)] border-4 border-[color:var(--ink)] shadow-[3px_3px_0_0_var(--ink)]"
                       : "text-[color:var(--cream)] hover:bg-white/10"
@@ -51,19 +51,19 @@ export function ChildNavbar() {
             );
           })}
         </ul>
-        <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2 rounded-xl border-4 border-[color:var(--cream)]/20 bg-white/5 px-3 py-1.5">
+        <div className="flex items-center gap-2 shrink-0 ml-auto">
+          <div className="hidden xl:flex items-center gap-2 rounded-xl border-4 border-[color:var(--cream)]/20 bg-white/5 px-3 py-1.5">
             <span className="font-pixel text-[9px] text-[color:var(--sunny)]">LVL 12</span>
-            <div className="bar w-20"><span style={{ width: "62%" }} /></div>
+            <div className="bar w-16"><span style={{ width: "62%" }} /></div>
             <span className="font-pixel text-[9px] text-[color:var(--teal-pop)]">2340 XP</span>
           </div>
-          <button className="grid h-10 w-10 place-items-center rounded-full border-4 border-[color:var(--ink)] bg-[color:var(--sunny)] shadow-[3px_3px_0_0_var(--ink)]" aria-label="Notifications">
+          <button className="grid h-10 w-10 place-items-center rounded-full border-4 border-[color:var(--ink)] bg-[color:var(--sunny)] shadow-[3px_3px_0_0_var(--ink)] shrink-0" aria-label="Notifications">
             <Bell size={16} className="text-[color:var(--ink)]" />
           </button>
-          <Link to="/dashboard" className="grid h-10 w-10 place-items-center rounded-full border-4 border-[color:var(--ink)] bg-[color:var(--orange-pop)] shadow-[3px_3px_0_0_var(--ink)] hover:-translate-y-0.5 transition" aria-label="Avatar">
+          <Link to="/dashboard" className="grid h-10 w-10 place-items-center rounded-full border-4 border-[color:var(--ink)] bg-[color:var(--orange-pop)] shadow-[3px_3px_0_0_var(--ink)] hover:-translate-y-0.5 transition shrink-0" aria-label="Avatar">
             <span className="font-pixel text-[10px] text-white">P1</span>
           </Link>
-          <button onClick={switchToParent} title="Switch to Parent" className="hidden md:grid h-10 w-10 place-items-center rounded-full border-4 border-[color:var(--ink)] bg-[color:var(--cherry)] shadow-[3px_3px_0_0_var(--ink)]" aria-label="Switch to parent">
+          <button onClick={switchToParent} title="Switch to Parent" className="hidden md:grid h-10 w-10 place-items-center rounded-full border-4 border-[color:var(--ink)] bg-[color:var(--cherry)] shadow-[3px_3px_0_0_var(--ink)] shrink-0" aria-label="Switch to parent">
             <LogOut size={14} className="text-white" />
           </button>
         </div>
