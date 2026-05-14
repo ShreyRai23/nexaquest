@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { useState } from "react";
 import { Mail, Lock, User, Sparkles, Baby, Users } from "lucide-react";
+import { setRole as persistRole } from "@/lib/role";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — MindBloom AI" }, { name: "description", content: "Enter the magical academy. Sign in or create your hero." }] }),
