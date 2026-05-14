@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
 import { useRoleGuard } from "@/lib/role";
-import { AppSidebar } from "@/components/AppSidebar";
+
 import { Flame, Trophy, Sparkles, Clock, Zap, Star } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
@@ -22,8 +22,7 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
-        <AppSidebar />
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6">
         <div className="space-y-6">
           {/* Welcome banner */}
           <div className="pixel-card-flat bg-[color:var(--sunny)] p-6 flex items-center gap-5 flex-wrap">
