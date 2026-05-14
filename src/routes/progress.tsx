@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Navbar } from "@/components/Navbar";
+import { RoleNavbar } from "@/components/RoleNavbar";
 
 export const Route = createFileRoute("/progress")({
   head: () => ({ meta: [{ title: "Progress — MindBloom AI" }, { name: "description", content: "Your skill map and growth journey." }] }),
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/progress")({
 function Progress() {
   return (
     <div className="min-h-screen bg-dots">
-      <Navbar />
+      <RoleNavbar />
       <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
         <div className="pixel-card-flat bg-[color:var(--teal-pop)] p-8">
           <div className="font-pixel text-[10px] text-[color:var(--cherry)]">SKILL MAP</div>
