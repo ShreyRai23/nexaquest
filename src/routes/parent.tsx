@@ -9,6 +9,7 @@ export const Route = createFileRoute("/parent")({
 });
 
 function Parent() {
+  useRoleGuard("parent");
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />

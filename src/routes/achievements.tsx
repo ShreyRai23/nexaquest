@@ -36,6 +36,7 @@ const rar: Record<string,string> = {
 };
 
 function Achievements() {
+  useRoleGuard("child");
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />

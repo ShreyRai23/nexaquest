@@ -18,6 +18,7 @@ const lands = [
 ];
 
 function Missions() {
+  useRoleGuard("child");
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />

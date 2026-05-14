@@ -18,6 +18,7 @@ const skills = [
 ];
 
 function Dashboard() {
+  useRoleGuard("child");
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />

@@ -12,6 +12,7 @@ export const Route = createFileRoute("/mentor")({
 type Msg = { role: "ai" | "me"; t: string };
 
 function Mentor() {
+  useRoleGuard("child");
   const [msgs, setMsgs] = useState<Msg[]>([
     { role: "ai", t: "Hi Explorer! 🌟 I'm Bloomy, your AI mentor. Ready for today's quest?" },
     { role: "me", t: "What are my biggest strengths?" },

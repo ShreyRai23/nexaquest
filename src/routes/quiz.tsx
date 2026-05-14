@@ -16,6 +16,7 @@ const Q = {
 };
 
 function Quiz() {
+  useRoleGuard("child");
   const [picked, setPicked] = useState<number | null>(null);
   const [hp, setHp] = useState({ p: 100, e: 100 });
   const [xp, setXp] = useState(420);
