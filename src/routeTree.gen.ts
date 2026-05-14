@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SkillMapRouteImport } from './routes/skill-map'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as ProgressRouteImport } from './routes/progress'
@@ -31,6 +32,11 @@ const SkillMapRoute = SkillMapRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportRoute = ReportRouteImport.update({
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
   '/report': typeof ReportRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skill-map': typeof SkillMapRoute
 }
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
   '/report': typeof ReportRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skill-map': typeof SkillMapRoute
 }
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
   '/report': typeof ReportRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skill-map': typeof SkillMapRoute
 }
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/quiz'
     | '/report'
+    | '/settings'
     | '/sitemap.xml'
     | '/skill-map'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/quiz'
     | '/report'
+    | '/settings'
     | '/sitemap.xml'
     | '/skill-map'
   id:
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/quiz'
     | '/report'
+    | '/settings'
     | '/sitemap.xml'
     | '/skill-map'
   fileRoutesById: FileRoutesById
@@ -195,6 +207,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   QuizRoute: typeof QuizRoute
   ReportRoute: typeof ReportRoute
+  SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SkillMapRoute: typeof SkillMapRoute
 }
@@ -213,6 +226,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/report': {
@@ -307,6 +327,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   QuizRoute: QuizRoute,
   ReportRoute: ReportRoute,
+  SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SkillMapRoute: SkillMapRoute,
 }
