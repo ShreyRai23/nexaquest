@@ -12,6 +12,12 @@ export const Route = createFileRoute("/auth")({
 function Auth() {
   const [mode, setMode] = useState<"in" | "up">("in");
   const [role, setRole] = useState<"child" | "parent">("child");
+  const navigate = useNavigate();
+  const enter = (e: React.FormEvent) => {
+    e.preventDefault();
+    persistRole(role);
+    navigate({ to: role === "parent" ? "/parent" : "/dashboard" });
+  };
 
   return (
     <div className="min-h-screen bg-dots">
