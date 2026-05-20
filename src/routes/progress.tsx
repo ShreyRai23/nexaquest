@@ -10,8 +10,8 @@ function Progress() {
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
-        <div className="pixel-card-flat bg-[color:var(--teal-pop)] p-8">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-8 space-y-6">
+        <div className="pixel-card-flat p-8" style={{ background: "var(--teal-pop)", color: "var(--ink)" }}>
           <div className="font-pixel text-[10px] text-[color:var(--cherry)]">SKILL MAP</div>
           <h1 className="font-pixel text-2xl sm:text-3xl mt-3">Your Growth Journey</h1>
         </div>

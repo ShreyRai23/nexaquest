@@ -1,157 +1,171 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
-import { Download, Award, Sparkles, Brain, Palette, Rocket, Crown, Microscope, Code2, Lightbulb } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loader2, RefreshCw, Download } from "lucide-react";
+import api from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/report")({
-  head: () => ({ meta: [{ title: "AI Aptitude Report — MindBloom AI" }, { name: "description", content: "Personalized AI report: strengths, learning style, careers, growth missions." }] }),
+  head: () => ({ meta: [{ title: "My Report — MindBloom AI" }] }),
   component: Report,
 });
 
 function Report() {
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
+    if (user?.role === "parent") { navigate({ to: "/parent" }); return; }
+    loadReport();
+  }, [isAuthenticated]);
+
+  const loadReport = () => {
+    setLoading(true);
+    api.get("/reports/latest").then(r => { setData(r.data); setLoading(false); }).catch(() => setLoading(false));
+  };
+
+  const generateReport = async () => {
+    setGenerating(true);
+    try {
+      const res = await api.post("/reports/generate");
+      setData({ report: res.data.report, careers: res.data.careers });
+    } catch (e: any) {
+      alert(e.response?.data?.message || "Failed to generate report");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const downloadPdf = async () => {
+    if (!data?.report?.id) return;
+    try {
+      const res = await api.get(`/reports/${data.report.id}/pdf`, { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const a = document.createElement("a");
+      a.href = url; a.download = "mindbloom-report.pdf"; a.click();
+    } catch { alert("PDF download failed."); }
+  };
+
+  if (loading) return (
+    <div className="min-h-screen bg-dots flex items-center justify-center">
+      <div className="text-center"><div className="text-6xl animate-bounce">📊</div><div className="font-pixel text-sm mt-4">Loading report...</div></div>
+    </div>
+  );
+
+  const report = data?.report;
+  const careers = data?.careers ?? [];
+
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
-        {/* Header */}
-        <div className="pixel-card-flat bg-[color:var(--sky-pop)] p-6 flex flex-wrap items-center gap-5">
-          <div className="grid h-20 w-20 place-items-center rounded-2xl border-4 border-[color:var(--ink)] bg-[color:var(--orange-pop)] text-4xl shadow-[4px_4px_0_0_var(--ink)]">🦊</div>
-          <div className="flex-1 min-w-[200px]">
-            <div className="font-pixel text-[10px] text-[color:var(--cherry)]">APTITUDE REPORT · SEASON 1</div>
-            <h1 className="text-3xl font-black">Aarav Mehta</h1>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <span className="tag bg-[color:var(--sunny)]">LVL 12</span>
-              <span className="tag bg-[color:var(--grass)] text-white"><Crown size={12}/> Rank: Explorer Gold</span>
-              <span className="tag bg-white"><Sparkles size={12}/> AI Confidence 92%</span>
+      <div className="mx-auto max-w-4xl px-3 sm:px-6 pb-10 mt-8 space-y-6">
+
+        <div className="pixel-card-flat p-6 text-white" style={{ background: "linear-gradient(to right, var(--orange-pop), var(--cherry))" }}>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <div className="font-pixel text-[10px] opacity-70">AI APTITUDE</div>
+              <h1 className="font-pixel text-2xl mt-1">📊 My Report</h1>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={generateReport} disabled={generating} className="btn-game text-sm">
+                {generating ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                {generating ? "Generating..." : "New Report"}
+              </button>
+              {report && (
+                <button onClick={downloadPdf} className="btn-game ghost text-sm">
+                  <Download size={14} /> PDF
+                </button>
+              )}
             </div>
           </div>
-          <button className="btn-game orange"><Download size={16}/> Download Report</button>
         </div>
 
-        {/* AI summary */}
-        <div className="pixel-card-flat bg-[color:var(--sunny)] p-6">
-          <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-lg border-4 border-[color:var(--ink)] bg-white">🤖</div>
-            <div className="font-pixel text-[10px]">AI SUMMARY</div>
+        {!report ? (
+          <div className="pixel-card-flat bg-[color:var(--cream)] p-8 text-center">
+            <div className="text-5xl mb-4">🤖</div>
+            <div className="font-pixel text-sm mb-4">No report yet! Generate your first AI aptitude report.</div>
+            <button onClick={generateReport} disabled={generating} className="btn-game orange">
+              {generating ? "Generating... ⏳" : "✨ Generate AI Report"}
+            </button>
+            <div className="text-xs mt-3 opacity-60">Complete a few quizzes first for best results!</div>
           </div>
-          <p className="mt-3 text-lg font-semibold">
-            Aarav is a <span className="bg-white px-2 border-4 border-[color:var(--ink)] rounded-md">visual-spatial learner</span> with strong logical reasoning. He thrives on building, puzzles and stories — and shows early signs of inventor-style creativity. Recommend more team-based quests to grow communication.
-          </p>
-          <div className="grid gap-3 mt-4 sm:grid-cols-3">
-            {[
-              {t:"Top Strength", v:"Spatial Logic", c:"var(--teal-pop)"},
-              {t:"Learning Style", v:"Visual + Hands-on", c:"var(--orange-pop)"},
-              {t:"Personality", v:"Curious Inventor", c:"var(--cherry)"},
-            ].map(s=>(
-              <div key={s.t} className="rounded-xl border-4 border-[color:var(--ink)] p-3 text-white shadow-[3px_3px_0_0_var(--ink)]" style={{background: s.c}}>
-                <div className="font-pixel text-[9px]">{s.t.toUpperCase()}</div>
-                <div className="font-black mt-1">{s.v}</div>
+        ) : (
+          <>
+            {/* Summary */}
+            <div className="pixel-card-flat bg-[color:var(--cream)] p-6">
+              <div className="font-pixel text-[10px] mb-3">🤖 AI SUMMARY</div>
+              <p className="font-semibold text-base leading-relaxed">{report.summary}</p>
+              <div className="grid grid-cols-3 gap-4 mt-5">
+                {[
+                  { label: "Top Strength", value: report.top_strength, emoji: "💪" },
+                  { label: "Learning Style", value: report.learning_style, emoji: "🧠" },
+                  { label: "Personality", value: report.personality_type, emoji: "🌟" },
+                ].map(s => (
+                  <div key={s.label} className="pixel-card bg-white p-3 text-center">
+                    <div className="text-2xl">{s.emoji}</div>
+                    <div className="font-pixel text-[8px] mt-1 opacity-60">{s.label.toUpperCase()}</div>
+                    <div className="font-black text-sm mt-1">{s.value ?? "—"}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Skill analytics */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="pixel-card p-5">
-            <h3 className="text-xl font-black">Skill breakdown</h3>
-            <div className="mt-4 space-y-3">
-              {[["Logic",92,"var(--teal-pop)"],["Creativity",78,"var(--orange-pop)"],["Memory",70,"var(--grass)"],["Communication",58,"var(--cherry)"],["Leadership",65,"var(--sunny)"]].map(([n,v,c])=>(
-                <div key={n as string}>
-                  <div className="flex justify-between text-sm font-bold"><span>{n as string}</span><span>{v as number}%</span></div>
-                  <div className="bar mt-1"><span style={{width:`${v}%`, background: c as string}}/></div>
-                </div>
-              ))}
             </div>
-          </div>
-          <div className="pixel-card p-5">
-            <h3 className="text-xl font-black">Weekly progress</h3>
-            <BarsChart data={[40,55,48,72,68,80,86]}/>
-          </div>
-        </div>
 
-        {/* Interest heatmap */}
-        <div className="pixel-card-flat bg-white p-5">
-          <h3 className="text-xl font-black">Interest heatmap</h3>
-          <div className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {[
-              {n:"Science", e:"🔬", v:88, c:"var(--teal-pop)"},
-              {n:"Arts", e:"🎨", v:72, c:"var(--orange-pop)"},
-              {n:"Tech", e:"💻", v:84, c:"var(--sky-pop)"},
-              {n:"Leadership", e:"👑", v:55, c:"var(--sunny)"},
-              {n:"Sports", e:"⚽", v:48, c:"var(--grass)"},
-            ].map(i=>(
-              <div key={i.n} className="rounded-xl border-4 border-[color:var(--ink)] p-4 text-center shadow-[3px_3px_0_0_var(--ink)] hover:-translate-y-1 transition" style={{background:i.c}}>
-                <div className="text-4xl">{i.e}</div>
-                <div className="font-black mt-1">{i.n}</div>
-                <div className="font-pixel text-[10px] mt-1">{i.v}%</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recommended careers */}
-        <div>
-          <h3 className="text-xl font-black mb-3">🎯 Future career matches</h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {n:"Scientist", i:Microscope, m:91, c:"var(--teal-pop)"},
-              {n:"Game Designer", i:Sparkles, m:88, c:"var(--orange-pop)"},
-              {n:"Engineer", i:Code2, m:84, c:"var(--sky-pop)"},
-              {n:"Entrepreneur", i:Rocket, m:76, c:"var(--cherry)"},
-            ].map(c=>(
-              <div key={c.n} className="pixel-card p-4 text-center">
-                <div className="grid h-16 w-16 place-items-center rounded-xl border-4 border-[color:var(--ink)] mx-auto" style={{background: c.c, color:"white"}}>
-                  <c.i size={28}/>
+            {/* Strengths & Weaknesses */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="pixel-card-flat bg-green-50 border-green-300 p-5">
+                <div className="font-pixel text-[10px] mb-3">💪 STRENGTHS</div>
+                <div className="space-y-2">
+                  {(report.strengths_json ?? []).map((s: string, i: number) => (
+                    <div key={i} className="flex items-start gap-2 text-sm font-semibold">
+                      <span className="text-green-500 mt-0.5">✅</span> {s}
+                    </div>
+                  ))}
                 </div>
-                <div className="font-black mt-3">{c.n}</div>
-                <div className="bar mt-2"><span style={{width:`${c.m}%`, background: c.c}}/></div>
-                <div className="font-pixel text-[10px] mt-2">{c.m}% match</div>
-                <button className="btn-game w-full mt-3">Unlock path</button>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Improvement missions */}
-        <div className="pixel-card-flat bg-[color:var(--teal-pop)] p-6">
-          <h3 className="text-xl font-black">🚀 Growth missions from AI</h3>
-          <div className="grid gap-4 mt-4 sm:grid-cols-3">
-            {[
-              {t:"Story Builder", d:"Boost communication +12%", i:Brain, c:"var(--cherry)"},
-              {t:"Color Quest", d:"Explore creativity tracks", i:Palette, c:"var(--orange-pop)"},
-              {t:"Lead the Squad", d:"Team challenge to grow leadership", i:Lightbulb, c:"var(--sunny)"},
-            ].map(m=>(
-              <div key={m.t} className="pixel-card p-4 bg-white">
-                <m.i size={24} style={{color: m.c}}/>
-                <div className="font-black mt-2">{m.t}</div>
-                <p className="text-sm text-[color:var(--ink)]/70">{m.d}</p>
-                <button className="btn-game mt-3" style={{background: m.c, color:"white"}}>Accept quest</button>
+              <div className="pixel-card-flat bg-orange-50 border-orange-300 p-5">
+                <div className="font-pixel text-[10px] mb-3">📈 GROWTH AREAS</div>
+                <div className="space-y-2">
+                  {(report.weaknesses_json ?? []).map((w: string, i: number) => (
+                    <div key={i} className="flex items-start gap-2 text-sm font-semibold">
+                      <span className="text-orange-500 mt-0.5">🎯</span> {w}
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="pixel-card-flat bg-[color:var(--cherry)] text-white p-8 text-center">
-          <Award size={40} className="mx-auto animate-bounce-soft"/>
-          <h3 className="font-pixel text-xl mt-3">Ready to share?</h3>
-          <p className="mt-2 font-semibold">Send this report to a parent, mentor or teacher.</p>
-          <button className="btn-game mt-4"><Download size={16}/> Download PDF</button>
-        </div>
+            {/* Career Recommendations */}
+            {careers.length > 0 && (
+              <div className="pixel-card-flat bg-[color:var(--cream)] p-6">
+                <div className="font-pixel text-[10px] mb-4">🚀 FUTURE CAREER MATCHES</div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {careers.map((c: any, i: number) => (
+                    <div key={i} className="pixel-card bg-white p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-3xl">{c.career_emoji}</span>
+                          <div className="font-black">{c.career_title}</div>
+                        </div>
+                        <div className="text-lg font-black text-green-600">{c.match_percentage}%</div>
+                      </div>
+                      <div className="text-xs mt-2 opacity-70">{c.ai_reasoning}</div>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {(c.skills_needed ?? []).map((s: string) => (
+                          <span key={s} className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-bold">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
-    </div>
-  );
-}
-
-function BarsChart({ data }: { data: number[] }) {
-  const max = Math.max(...data);
-  return (
-    <div className="mt-4 flex items-end gap-2 h-44 border-b-4 border-[color:var(--ink)] pb-2">
-      {data.map((v,i)=>(
-        <div key={i} className="flex-1 flex flex-col items-center gap-1">
-          <div className="w-full rounded-t-md border-4 border-[color:var(--ink)] shadow-[2px_2px_0_0_var(--ink)]" style={{height: `${(v/max)*100}%`, background: ["var(--sunny)","var(--teal-pop)","var(--orange-pop)","var(--cherry)","var(--grass)","var(--sky-pop)","var(--grape)"][i]}}/>
-          <div className="font-pixel text-[8px]">D{i+1}</div>
-        </div>
-      ))}
     </div>
   );
 }

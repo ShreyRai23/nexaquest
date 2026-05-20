@@ -638,7 +638,7 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean;
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  // Random width between 50 to 90%.
+  // Random width between 50 to 90% — only runs client-side, intentional mismatch suppressed.
   const width = React.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
@@ -654,6 +654,7 @@ const SidebarMenuSkeleton = React.forwardRef<
       <Skeleton
         className="h-4 max-w-(--skeleton-width) flex-1"
         data-sidebar="menu-skeleton-text"
+        suppressHydrationWarning
         style={
           {
             "--skeleton-width": width,
@@ -664,6 +665,7 @@ const SidebarMenuSkeleton = React.forwardRef<
   );
 });
 SidebarMenuSkeleton.displayName = "SidebarMenuSkeleton";
+
 
 const SidebarMenuSub = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(
   ({ className, ...props }, ref) => (

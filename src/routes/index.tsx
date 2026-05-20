@@ -88,12 +88,12 @@ function Landing() {
         <SectionTitle eyebrow="POWER UPS" title="AI features that make learning play" />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 mt-8">
           {[
-            {i:Brain, t:"AI Adaptive Tests", d:"Quizzes that level with your kid in real time.", c:"var(--sunny)"},
-            {i:Compass, t:"AI Career Discovery", d:"Match strengths to future-ready careers.", c:"var(--teal-pop)"},
-            {i:MessageCircleHeart, t:"AI Mentor Chatbot", d:"A friendly NPC to guide every quest.", c:"var(--orange-pop)", w:true},
-            {i:Sparkles, t:"Gamified Quests", d:"Badges, XP, streaks and combo rewards.", c:"var(--grass)", w:true},
-            {i:BarChart3, t:"Skill Analytics", d:"Beautiful charts parents actually understand.", c:"var(--sky-pop)"},
-            {i:Trophy, t:"Achievement System", d:"Trophies, rare badges, and seasonal events.", c:"var(--cherry)", w:true},
+            {i:Brain, t:"AI Adaptive Tests", d:"Quizzes that level with your kid in real time.", c:"var(--sunny)", pct: 92},
+            {i:Compass, t:"AI Career Discovery", d:"Match strengths to future-ready careers.", c:"var(--teal-pop)", pct: 87},
+            {i:MessageCircleHeart, t:"AI Mentor Chatbot", d:"A friendly NPC to guide every quest.", c:"var(--orange-pop)", w:true, pct: 95},
+            {i:Sparkles, t:"Gamified Quests", d:"Badges, XP, streaks and combo rewards.", c:"var(--grass)", w:true, pct: 78},
+            {i:BarChart3, t:"Skill Analytics", d:"Beautiful charts parents actually understand.", c:"var(--sky-pop)", pct: 83},
+            {i:Trophy, t:"Achievement System", d:"Trophies, rare badges, and seasonal events.", c:"var(--cherry)", w:true, pct: 90},
           ].map((f) => (
             <div key={f.t} className="pixel-card p-5">
               <div className="grid h-14 w-14 place-items-center rounded-xl border-4 border-[color:var(--ink)] shadow-[3px_3px_0_0_var(--ink)]" style={{background: f.c, color: f.w ? "white" : "var(--ink)"}}>
@@ -101,7 +101,7 @@ function Landing() {
               </div>
               <h3 className="mt-4 text-xl font-black">{f.t}</h3>
               <p className="mt-1 text-sm text-[color:var(--ink)]/70">{f.d}</p>
-              <div className="bar mt-4"><span style={{width: `${50 + Math.random()*50}%`, background: f.c}}/></div>
+              <div className="bar mt-4"><span style={{width: `${f.pct}%`, background: f.c}}/></div>
             </div>
           ))}
         </div>

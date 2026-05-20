@@ -24,8 +24,8 @@ function Games() {
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
-        <div className="pixel-card-flat bg-[color:var(--orange-pop)] text-white p-8">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-8 space-y-6">
+        <div className="pixel-card-flat text-white p-8" style={{ background: "var(--orange-pop)" }}>
           <div className="font-pixel text-[10px] text-[color:var(--sunny)]">ARCADE</div>
           <h1 className="font-pixel text-2xl sm:text-3xl mt-3">All Mini Games</h1>
           <p className="mt-2 font-semibold">Pick a game, earn XP, unlock new worlds.</p>

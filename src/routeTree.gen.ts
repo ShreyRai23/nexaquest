@@ -15,6 +15,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MentorRouteImport } from './routes/mentor'
@@ -52,6 +53,11 @@ const QuizRoute = QuizRouteImport.update({
 const ProgressRoute = ProgressRouteImport.update({
   id: '/progress',
   path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentRoute = ParentRouteImport.update({
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/mentor': typeof MentorRoute
   '/missions': typeof MissionsRoute
   '/parent': typeof ParentRoute
+  '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
   '/report': typeof ReportRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/mentor': typeof MentorRoute
   '/missions': typeof MissionsRoute
   '/parent': typeof ParentRoute
+  '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
   '/report': typeof ReportRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/mentor': typeof MentorRoute
   '/missions': typeof MissionsRoute
   '/parent': typeof ParentRoute
+  '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
   '/report': typeof ReportRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/missions'
     | '/parent'
+    | '/profile'
     | '/progress'
     | '/quiz'
     | '/report'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/missions'
     | '/parent'
+    | '/profile'
     | '/progress'
     | '/quiz'
     | '/report'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/missions'
     | '/parent'
+    | '/profile'
     | '/progress'
     | '/quiz'
     | '/report'
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   MentorRoute: typeof MentorRoute
   MissionsRoute: typeof MissionsRoute
   ParentRoute: typeof ParentRoute
+  ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   QuizRoute: typeof QuizRoute
   ReportRoute: typeof ReportRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/progress'
       fullPath: '/progress'
       preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/parent': {
@@ -324,6 +344,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentorRoute: MentorRoute,
   MissionsRoute: MissionsRoute,
   ParentRoute: ParentRoute,
+  ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   QuizRoute: QuizRoute,
   ReportRoute: ReportRoute,

@@ -19,8 +19,8 @@ function Settings() {
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-4xl px-3 sm:px-6 mt-6 space-y-6">
-        <div className="pixel-card-flat bg-[color:var(--sunny)] p-6">
+      <div className="mx-auto max-w-4xl px-3 sm:px-6 mt-8 space-y-6">
+        <div className="pixel-card-flat p-6" style={{ background: "var(--sunny)", color: "var(--ink)" }}>
           <div className="font-pixel text-[10px] text-[color:var(--cherry)]">SETTINGS</div>
           <h1 className="font-pixel text-2xl mt-2">{role === "parent" ? "Parent settings" : "Hero settings"}</h1>
         </div>

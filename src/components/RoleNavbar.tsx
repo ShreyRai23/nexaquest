@@ -1,9 +1,9 @@
-import { useRole } from "@/lib/role";
+import { useAuth } from "@/lib/auth";
 import { ChildNavbar } from "./ChildNavbar";
 import { ParentNavbar } from "./ParentNavbar";
 
-/** Renders the navbar that matches the current user role. */
+/** Renders the correct navbar based on authenticated user role. */
 export function RoleNavbar() {
-  const role = useRole();
-  return role === "parent" ? <ParentNavbar /> : <ChildNavbar />;
+  const { user } = useAuth();
+  return user?.role === "parent" ? <ParentNavbar /> : <ChildNavbar />;
 }

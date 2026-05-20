@@ -1,104 +1,261 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
-import { useRoleGuard } from "@/lib/role";
-import { Lock, Star, Coins, Flame, Trophy, Clock } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { CheckCircle, Zap, Loader2 } from "lucide-react";
+import api from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/missions")({
-  head: () => ({ meta: [{ title: "Missions — MindBloom AI" }, { name: "description", content: "Choose your quest from a colorful adventure world." }] }),
+  head: () => ({ meta: [{ title: "Missions — MindBloom AI" }] }),
   component: Missions,
 });
 
-const lands = [
-  { n: "Logic Land", e: "🧠", c: "var(--sky-pop)", lvl: 12, stars: 3, locked: false },
-  { n: "Creativity Kingdom", e: "🎨", c: "var(--orange-pop)", lvl: 9, stars: 2, locked: false },
-  { n: "Science Valley", e: "🔬", c: "var(--teal-pop)", lvl: 7, stars: 2, locked: false },
-  { n: "Leadership Arena", e: "👑", c: "var(--sunny)", lvl: 5, stars: 1, locked: false },
-  { n: "Memory Forest", e: "🌳", c: "var(--grass)", lvl: 0, stars: 0, locked: true },
-  { n: "Mystery Isle", e: "🏝", c: "var(--grape)", lvl: 0, stars: 0, locked: true },
-];
+type MissionStatus = "pending" | "ready_to_claim" | "completed";
+
+interface MissionItem {
+  id: number;
+  status: MissionStatus;
+  completed_at: string | null;
+  assigned_date: string;
+  progress_count: number;
+  required_count: number;
+  mission: {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    emoji: string;
+    xp_reward: number;
+  };
+}
 
 function Missions() {
-  useRoleGuard("child");
+  const { isAuthenticated, user, refreshUser } = useAuth();
+  const navigate = useNavigate();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [claiming, setClaiming] = useState<number | null>(null);
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+
+  useEffect(() => {
+    if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
+    if (user?.role === "parent") { navigate({ to: "/parent" }); return; }
+    loadMissions();
+  }, [isAuthenticated]);
+
+  const loadMissions = useCallback(() => {
+    api.get("/missions/today")
+      .then(r => { setData(r.data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const showToast = (msg: string, type: "success" | "error") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const claimMission = async (progressId: number, xpReward: number) => {
+    setClaiming(progressId);
+    try {
+      const res = await api.post(`/missions/${progressId}/claim`);
+      showToast(`🎉 +${xpReward} XP claimed!`, "success");
+      if (res.data.new_achievements?.length > 0) {
+        setTimeout(() => showToast(`🏆 Achievement unlocked: ${res.data.new_achievements[0].name}!`, "success"), 1500);
+      }
+      // Refresh both mission list and user XP in parallel
+      await Promise.all([loadMissions(), refreshUser()]);
+    } catch (e: any) {
+      showToast(e.response?.data?.message || "Failed to claim mission", "error");
+    } finally {
+      setClaiming(null);
+    }
+  };
+
+  if (loading) return <LoadingScreen />;
+
+  const missions: MissionItem[] = data?.missions ?? [];
+  const completed = data?.completed ?? 0;
+  const total = data?.total ?? 0;
+
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
-        <div className="pixel-card-flat bg-[color:var(--cherry)] text-white p-8 text-center">
-          <div className="font-pixel text-[10px] text-[color:var(--sunny)]">QUEST BOARD</div>
-          <h1 className="font-pixel text-2xl sm:text-3xl mt-3">Choose Your Next Adventure</h1>
-          <p className="mt-2 font-semibold">5 worlds. 200+ challenges. Endless fun.</p>
+
+      {/* Toast notification */}
+      {toast && (
+        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-6 py-3 rounded-2xl border-4 border-[color:var(--ink)] shadow-[4px_4px_0_0_var(--ink)] font-bold text-sm transition-all ${
+          toast.type === "success"
+            ? "bg-[color:var(--sunny)] text-[color:var(--ink)]"
+            : "bg-[color:var(--cherry)] text-white"
+        }`}>
+          {toast.msg}
         </div>
+      )}
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
-          {/* World map */}
-          <div className="space-y-6">
-            <div className="pixel-card-flat bg-[color:var(--sky-pop)] p-5">
-              <h3 className="text-xl font-black">🗺 World map</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-                {lands.map(l=>(
-                  <div key={l.n} className={`pixel-card p-4 relative overflow-hidden ${l.locked?"opacity-70":""}`} style={{background: l.c}}>
-                    {l.locked && <div className="absolute top-2 right-2 grid h-8 w-8 place-items-center rounded-md border-4 border-[color:var(--ink)] bg-white"><Lock size={14}/></div>}
-                    <div className="text-5xl">{l.e}</div>
-                    <div className="font-black mt-2">{l.n}</div>
-                    <div className="flex gap-1 mt-1">
-                      {[1,2,3].map(i=><Star key={i} size={14} fill={i<=l.stars?"currentColor":"none"} className={i<=l.stars?"text-[color:var(--ink)]":"text-[color:var(--ink)]/30"}/>)}
-                    </div>
-                    <div className="font-pixel text-[9px] mt-1">LVL {l.lvl}</div>
-                  </div>
-                ))}
-              </div>
+      <div className="mx-auto max-w-4xl px-3 sm:px-6 pb-10 mt-8 space-y-6">
+
+        {/* Header */}
+        <div
+          className="pixel-card-flat p-6"
+          style={{ background: "linear-gradient(to right, var(--teal-pop), var(--sky-pop))", color: "var(--ink)" }}
+        >
+          <div className="font-pixel text-[10px] opacity-70">TODAY'S QUEST BOARD</div>
+          <h1 className="font-pixel text-2xl mt-1">🗺️ Daily Missions</h1>
+          <div className="mt-3">
+            <div className="flex justify-between text-sm font-bold mb-1">
+              <span>{completed}/{total} completed</span>
+              {data?.all_done && <span className="text-green-700">🎉 All done!</span>}
             </div>
-
-            {/* Challenges */}
-            <div>
-              <h3 className="text-xl font-black mb-3">🔥 Featured challenges</h3>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {[
-                  {t:"Pattern Pirate", w:"Logic Land", xp:240, time:"12m", d:"Hard", c:"var(--sky-pop)", e:"🏴‍☠️"},
-                  {t:"Color Castle", w:"Creativity Kingdom", xp:180, time:"8m", d:"Medium", c:"var(--orange-pop)", e:"🏰"},
-                  {t:"Galaxy Lab", w:"Science Valley", xp:200, time:"15m", d:"Medium", c:"var(--teal-pop)", e:"🛸"},
-                  {t:"Squad Captain", w:"Leadership Arena", xp:300, time:"20m", d:"Hard", c:"var(--sunny)", e:"⚔️"},
-                ].map(ch=>(
-                  <div key={ch.t} className="pixel-card p-4 flex gap-4">
-                    <div className="grid h-20 w-20 shrink-0 place-items-center rounded-xl border-4 border-[color:var(--ink)] text-4xl" style={{background:ch.c}}>{ch.e}</div>
-                    <div className="flex-1">
-                      <div className="font-pixel text-[9px] text-[color:var(--cherry)]">{ch.w.toUpperCase()}</div>
-                      <div className="font-black">{ch.t}</div>
-                      <div className="flex flex-wrap gap-1 mt-2 text-xs">
-                        <span className="tag bg-[color:var(--sunny)]">+{ch.xp} XP</span>
-                        <span className="tag"><Clock size={10}/> {ch.time}</span>
-                        <span className="tag bg-[color:var(--cherry)] text-white">{ch.d}</span>
-                      </div>
-                      <Link to="/quiz" className="btn-game mt-3">Start quest</Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="h-4 bg-white/30 rounded-full overflow-hidden border-2 border-[color:var(--ink)]">
+              <div
+                className="h-full bg-[color:var(--ink)] rounded-full transition-all duration-700"
+                style={{ width: total > 0 ? `${(completed / total) * 100}%` : "0%" }}
+              />
             </div>
           </div>
+        </div>
 
-          {/* Player stats */}
-          <aside className="pixel-card-flat bg-[color:var(--ink)] text-[color:var(--cream)] p-5 h-fit sticky top-24">
-            <div className="font-pixel text-[10px] text-[color:var(--sunny)]">PLAYER STATS</div>
-            <div className="mt-4 space-y-3">
-              {[
-                {i:Coins, l:"Coins", v:"1,240", c:"var(--sunny)"},
-                {i:Flame, l:"Streak", v:"7 days", c:"var(--cherry)"},
-                {i:Star, l:"Level", v:"12", c:"var(--orange-pop)"},
-                {i:Trophy, l:"Badges", v:"24", c:"var(--grass)"},
-              ].map(s=>(
-                <div key={s.l} className="flex items-center gap-3 rounded-xl border-4 border-[color:var(--cream)]/30 bg-white/5 p-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-lg border-4 border-[color:var(--ink)]" style={{background:s.c, color:"var(--ink)"}}><s.i size={16}/></div>
-                  <div>
-                    <div className="font-pixel text-[9px] opacity-70">{s.l.toUpperCase()}</div>
-                    <div className="font-black">{s.v}</div>
+        {/* Mission cards */}
+        <div className="space-y-4">
+          {missions.length === 0 && (
+            <div className="pixel-card-flat bg-[color:var(--cream)] p-8 text-center">
+              <div className="text-5xl mb-3">🎯</div>
+              <div className="font-pixel text-sm">No missions today yet. Check back soon!</div>
+            </div>
+          )}
+
+          {missions.map((m) => {
+            const pct = m.required_count > 0
+              ? Math.round((m.progress_count / m.required_count) * 100)
+              : 0;
+            const isCompleted = m.status === "completed";
+            const isReady = m.status === "ready_to_claim";
+            const isClaiming = claiming === m.id;
+
+            return (
+              <div
+                key={m.id}
+                className={`pixel-card-flat p-5 transition-all ${
+                  isCompleted
+                    ? "bg-green-50 border-green-400"
+                    : isReady
+                      ? "bg-[color:var(--sunny)]/20 border-[color:var(--sunny)] hover:-translate-y-0.5"
+                      : "bg-[color:var(--cream)] hover:-translate-y-0.5"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  {/* Left: icon + info */}
+                  <div className="flex items-start gap-4 flex-1 min-w-0">
+                    <div className="text-4xl shrink-0">{m.mission?.emoji ?? "🎯"}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-black text-lg leading-tight">{m.mission?.title}</div>
+                      <div className="text-sm opacity-70 mt-0.5">{m.mission?.description}</div>
+                      <div className="mt-1.5 flex gap-2 text-xs font-bold flex-wrap">
+                        <span className="px-2 py-0.5 rounded-full border-2 border-purple-400 text-purple-600">
+                          {m.mission?.category}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full border-2 border-yellow-400 text-yellow-700">
+                          +{m.mission?.xp_reward} XP
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: status */}
+                  <div className="shrink-0">
+                    {isCompleted ? (
+                      <div className="flex flex-col items-center gap-1">
+                        <CheckCircle size={36} className="text-green-500" />
+                        <span className="font-pixel text-[8px] text-green-600">CLAIMED</span>
+                      </div>
+                    ) : isReady ? (
+                      <button
+                        onClick={() => claimMission(m.id, m.mission.xp_reward)}
+                        disabled={isClaiming}
+                        className="btn-game orange flex items-center gap-2 text-sm px-4 py-2"
+                      >
+                        {isClaiming
+                          ? <><Loader2 size={15} className="animate-spin" /> Claiming...</>
+                          : <><Zap size={15} /> Claim XP!</>
+                        }
+                      </button>
+                    ) : (
+                      <div className="text-center">
+                        <div className="font-pixel text-[9px] text-[color:var(--ink)]/60 mb-1">
+                          {m.progress_count}/{m.required_count}
+                        </div>
+                        <div className="w-16 h-16 relative">
+                          <CircleProgress pct={pct} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-            <Link to="/achievements" className="btn-game w-full mt-4">Trophy hall</Link>
-          </aside>
+
+                {/* Progress bar — only for in-progress missions */}
+                {!isCompleted && (
+                  <div className="mt-3">
+                    <div className="flex justify-between text-[10px] font-bold mb-1 opacity-70">
+                      <span>
+                        {isReady ? "✅ Target met!" : `${m.progress_count} of ${m.required_count} done`}
+                      </span>
+                      <span>{pct}%</span>
+                    </div>
+                    <div className="h-3 bg-[color:var(--ink)]/10 rounded-full overflow-hidden border border-[color:var(--ink)]/20">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ${
+                          isReady
+                            ? "bg-gradient-to-r from-[color:var(--sunny)] to-[color:var(--orange-pop)]"
+                            : "bg-gradient-to-r from-[color:var(--teal-pop)] to-[color:var(--sky-pop)]"
+                        }`}
+                        style={{ width: `${Math.min(pct, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
+
+        {data?.all_done && (
+          <div className="pixel-card-flat bg-[color:var(--sunny)] p-6 text-center">
+            <div className="text-5xl">🏆</div>
+            <div className="font-pixel text-sm mt-2">ALL MISSIONS COMPLETE!</div>
+            <div className="font-semibold mt-1">You're a true hero! Come back tomorrow for more quests ⚡</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** SVG circle progress indicator */
+function CircleProgress({ pct }: { pct: number }) {
+  const r = 26;
+  const circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+  return (
+    <svg width="64" height="64" viewBox="0 0 64 64" className="-rotate-90">
+      <circle cx="32" cy="32" r={r} fill="none" stroke="rgba(0,0,0,0.1)" strokeWidth="8" />
+      <circle
+        cx="32" cy="32" r={r} fill="none"
+        stroke="var(--teal-pop)"
+        strokeWidth="8"
+        strokeDasharray={`${dash} ${circ}`}
+        strokeLinecap="round"
+        style={{ transition: "stroke-dasharray 0.7s ease" }}
+      />
+    </svg>
+  );
+}
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-dots flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-6xl animate-bounce">🗺️</div>
+        <div className="font-pixel text-sm mt-4">Loading missions...</div>
       </div>
     </div>
   );

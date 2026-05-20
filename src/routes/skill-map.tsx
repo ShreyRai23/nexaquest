@@ -20,8 +20,8 @@ function SkillMap() {
   return (
     <div className="min-h-screen bg-dots">
       <RoleNavbar />
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-6 space-y-6">
-        <div className="pixel-card-flat bg-[color:var(--grape,var(--cherry))] text-white p-8" style={{background:"var(--cherry)"}}>
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 mt-8 space-y-6">
+        <div className="pixel-card-flat text-white p-8" style={{ background: "var(--cherry)" }}>
           <div className="font-pixel text-[10px] text-[color:var(--sunny)]">SKILL CONSTELLATION</div>
           <h1 className="font-pixel text-2xl sm:text-3xl mt-3">Your Skill Map</h1>
           <p className="mt-2 font-semibold">Travel between skill planets to grow your hero.</p>
