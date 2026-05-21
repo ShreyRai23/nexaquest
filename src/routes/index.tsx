@@ -42,9 +42,9 @@ function Landing() {
                 <Link to="/games" className="btn-game ghost"><Gamepad2 size={18}/> Explore Games</Link>
               </div>
               <div className="flex flex-wrap items-center gap-4 pt-2 text-sm">
-                <div className="tag"><Star size={12} fill="currentColor" className="text-[color:var(--orange-pop)]"/> 4.9 from 12k families</div>
-                <div className="tag bg-[color:var(--grass)] text-white">🛡 Kid-safe AI</div>
-                <div className="tag bg-[color:var(--teal-pop)]">🎮 200+ quests</div>
+                <div className="tag"><Star size={12} fill="currentColor" className="text-orange-500"/> 4.9 from 12k families</div>
+                <div className="tag">🛡 Kid-safe AI</div>
+                <div className="tag">🎮 200+ quests</div>
               </div>
             </div>
 
@@ -156,14 +156,14 @@ function Landing() {
 
       {/* PARENT TRUST */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 mt-20">
-        <div className="pixel-card-flat bg-[color:var(--ink)] text-[color:var(--cream)] p-6 sm:p-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
+        <div className="pixel-card-flat bg-white text-gray-900 p-6 sm:p-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
           <div>
-            <span className="tag bg-[color:var(--teal-pop)]">PARENT COMMAND CENTER</span>
+            <span className="tag bg-blue-100 text-blue-800">PARENT COMMAND CENTER</span>
             <h3 className="font-display text-3xl mt-3">See your child bloom</h3>
-            <p className="mt-3 text-[color:var(--cream)]/80">Beautiful weekly reports. AI-explained strengths. Safe screen-time controls. All in one playful dashboard.</p>
+            <p className="mt-3 text-gray-600">Beautiful weekly reports. AI-explained strengths. Safe screen-time controls. All in one playful dashboard.</p>
             <div className="mt-5 grid grid-cols-3 gap-3">
               {[["Safe AI","🛡"],["Weekly Report","📊"],["Time Limits","⏱"]].map(([t,e])=>(
-                <div key={t} className="rounded-xl border-4 border-[color:var(--cream)]/30 bg-white/5 p-3 text-center">
+                <div key={t} className="rounded-xl border-4 border-gray-900 bg-gray-50 p-3 text-center">
                   <div className="text-2xl">{e}</div>
                   <div className="text-xs mt-1 font-bold">{t}</div>
                 </div>
@@ -171,7 +171,7 @@ function Landing() {
             </div>
             <Link to="/parent" className="btn-game orange mt-6">Open Parent Zone</Link>
           </div>
-          <div className="pixel-card bg-[color:var(--cream)] text-[color:var(--ink)] p-5">
+          <div className="pixel-card bg-gray-50 text-gray-900 p-5">
             <div className="flex justify-between items-center"><div className="font-pixel text-[10px]">WEEKLY REPORT</div><span className="tag bg-[color:var(--grass)] text-white">+18%</span></div>
             <div className="mt-3 grid gap-2">
               {[["Logic", 82, "var(--sky-pop)"],["Creativity", 64, "var(--orange-pop)"],["Memory", 71, "var(--grass)"],["Communication", 58, "var(--cherry)"]].map(([n,v,c])=>(
@@ -206,10 +206,10 @@ function Landing() {
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 mt-20">
-        <div className="pixel-card-flat bg-[color:var(--orange-pop)] p-8 sm:p-12 text-center text-white">
-          <Map className="mx-auto animate-float" size={48}/>
+        <div className="pixel-card-flat bg-white text-gray-900 p-8 sm:p-12 text-center">
+          <Map className="mx-auto animate-float text-orange-500" size={48}/>
           <h3 className="font-pixel text-xl sm:text-2xl mt-4">Ready, Player One?</h3>
-          <p className="mt-2 font-semibold">Create a free hero and begin your first quest.</p>
+          <p className="mt-2 font-semibold text-gray-600">Create a free hero and begin your first quest.</p>
           <div className="mt-5 flex justify-center gap-3 flex-wrap">
             <Link to="/auth" className="btn-game">Create Hero</Link>
             <Link to="/dashboard" className="btn-game ghost">Try the demo</Link>

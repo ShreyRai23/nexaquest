@@ -34,9 +34,10 @@ function Auth() {
       }
       navigate({ to: role === "parent" ? "/parent" : "/dashboard" });
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.response?.data?.errors
-        ? Object.values(err.response?.data?.errors || {}).flat().join(" ")
-        : "Something went wrong. Please try again!";
+      const data = err.response?.data;
+      const msg = data?.errors 
+        ? Object.values(data.errors).flat().join(" ") 
+        : (data?.message || "Something went wrong. Please try again!");
       setError(msg as string);
     } finally {
       setLoading(false);
@@ -130,12 +131,6 @@ function Auth() {
             </button>
           </form>
 
-          {/* Demo credentials hint */}
-          <div className="mt-4 bg-purple-50 border-2 border-purple-200 rounded-xl p-3 text-xs">
-            <div className="font-pixel text-[8px] text-purple-600 mb-1">DEMO ACCOUNTS</div>
-            <div>🦊 Child: <strong>aarav@mindbloom.ai</strong> / password123</div>
-            <div>👩 Parent: <strong>priya@mindbloom.ai</strong> / password123</div>
-          </div>
 
           <div className="mt-3 text-center text-xs text-[color:var(--ink)]/60">
             By continuing you agree to our playful Terms ✨
