@@ -19,13 +19,35 @@ function ProgressPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const [resolvedChildId, setResolvedChildId] = useState<number>(childId);
+
   useEffect(() => {
     if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
     if (user?.role === "child") { navigate({ to: "/dashboard" }); return; }
-    if (!childId) { navigate({ to: "/parent" }); return; }
-    api.get(`/parent/children/${childId}/progress`)
-      .then(r => { setData(r.data); setLoading(false); })
-      .catch(() => setLoading(false));
+
+    const fetchProgress = (id: number) => {
+      api.get(`/parent/children/${id}/progress`)
+        .then(r => { setData(r.data); setLoading(false); })
+        .catch(() => setLoading(false));
+    };
+
+    if (childId) {
+      setResolvedChildId(childId);
+      fetchProgress(childId);
+    } else {
+      // No childId in URL (came from navbar) — auto-pick the first child
+      api.get("/parent/dashboard")
+        .then(r => {
+          const first = r.data.children?.[0];
+          if (first) {
+            setResolvedChildId(first.id);
+            fetchProgress(first.id);
+          } else {
+            navigate({ to: "/parent" });
+          }
+        })
+        .catch(() => navigate({ to: "/parent" }));
+    }
   }, [isAuthenticated, childId]);
 
   if (loading) return (

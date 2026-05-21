@@ -21,9 +21,11 @@ function ReportPage() {
   const [generating, setGenerating] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  const load = () => {
+  const [resolvedChildId, setResolvedChildId] = useState<number>(childId);
+
+  const load = (id: number) => {
     setLoading(true);
-    api.get(`/parent/children/${childId}/report/latest`)
+    api.get(`/parent/children/${id}/report/latest`)
       .then(r => { setData(r.data); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -31,16 +33,33 @@ function ReportPage() {
   useEffect(() => {
     if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
     if (user?.role === "child") { navigate({ to: "/dashboard" }); return; }
-    if (!childId) { navigate({ to: "/parent" }); return; }
-    load();
+    
+    if (childId) {
+      setResolvedChildId(childId);
+      load(childId);
+    } else {
+      // No childId in URL (came from navbar) — auto-pick the first child
+      api.get("/parent/dashboard")
+        .then(r => {
+          const first = r.data.children?.[0];
+          if (first) {
+            setResolvedChildId(first.id);
+            load(first.id);
+          } else {
+            navigate({ to: "/parent" });
+          }
+        })
+        .catch(() => navigate({ to: "/parent" }));
+    }
   }, [isAuthenticated, childId]);
 
   const generate = async () => {
+    if (!resolvedChildId) return;
     setGenerating(true);
     try {
-      await api.post(`/parent/children/${childId}/report`);
+      await api.post(`/parent/children/${resolvedChildId}/report`);
       showToast("✅ New AI report generated!");
-      load();
+      load(resolvedChildId);
     } catch (e: any) {
       showToast(e.response?.data?.message ?? "Failed to generate report.");
     } finally {
@@ -50,9 +69,9 @@ function ReportPage() {
 
   const downloadPdf = () => {
     const report = data?.report;
-    if (!report) return;
+    if (!report || !resolvedChildId) return;
     const token = localStorage.getItem("mb.token");
-    const url = `${import.meta.env.VITE_API_URL || "http://localhost:8000/api"}/parent/children/${childId}/report/${report.id}/pdf`;
+    const url = `${import.meta.env.VITE_API_URL || "http://localhost:8000/api"}/parent/children/${resolvedChildId}/report/${report.id}/pdf`;
     const a = document.createElement("a");
     a.href = url;
     a.target = "_blank";
