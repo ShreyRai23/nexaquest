@@ -4,7 +4,7 @@ import { useRoleGuard } from "@/lib/role";
 import { Star } from "lucide-react";
 
 export const Route = createFileRoute("/games")({
-  head: () => ({ meta: [{ title: "Games — MindBloom AI" }, { name: "description", content: "Browse all mini games and arcade quests." }] }),
+  head: () => ({ meta: [{ title: "Games — NexaQuest AI" }, { name: "description", content: "Browse all mini games and arcade quests." }] }),
   component: Games,
 });
 

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
 
 export const Route = createFileRoute("/progress")({
-  head: () => ({ meta: [{ title: "Progress — MindBloom AI" }, { name: "description", content: "Your skill map and growth journey." }] }),
+  head: () => ({ meta: [{ title: "Progress — NexaQuest AI" }, { name: "description", content: "Your skill map and growth journey." }] }),
   component: Progress,
 });
 
@@ -31,7 +31,7 @@ function Progress() {
             <h3 className="text-xl font-black">Adventure timeline</h3>
             <div className="mt-4 space-y-3">
               {[
-                "🌱 Joined MindBloom",
+                "🌱 Joined NexaQuest",
                 "⚔️ Cleared Logic Lava",
                 "🎨 Unlocked Creativity Kingdom",
                 "🏆 Earned Streak badge",

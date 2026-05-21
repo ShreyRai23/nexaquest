@@ -4,7 +4,7 @@ import { useRole, setRole } from "@/lib/role";
 import { Bell, Volume2, Moon, Shield, User } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — MindBloom AI" }, { name: "description", content: "Account, profile and app settings." }] }),
+  head: () => ({ meta: [{ title: "Settings — NexaQuest AI" }, { name: "description", content: "Account, profile and app settings." }] }),
   component: Settings,
 });
 

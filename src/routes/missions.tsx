@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/missions")({
-  head: () => ({ meta: [{ title: "Missions — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "Missions — NexaQuest AI" }] }),
   component: Missions,
 });
 

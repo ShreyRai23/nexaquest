@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/parent-report")({
-  head: () => ({ meta: [{ title: "AI Report — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "AI Report — NexaQuest AI" }] }),
   component: ReportPage,
   validateSearch: (s: Record<string, unknown>) => ({ childId: Number(s.childId ?? 0) }),
 });

@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/report")({
-  head: () => ({ meta: [{ title: "My Report — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "My Report — NexaQuest AI" }] }),
   component: Report,
 });
 
@@ -46,7 +46,7 @@ function Report() {
       const res = await api.get(`/reports/${data.report.id}/pdf`, { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const a = document.createElement("a");
-      a.href = url; a.download = "mindbloom-report.pdf"; a.click();
+      a.href = url; a.download = "nexaquest-report.pdf"; a.click();
     } catch { alert("PDF download failed."); }
   };
 

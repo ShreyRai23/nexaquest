@@ -3,7 +3,7 @@ import { RoleNavbar } from "@/components/RoleNavbar";
 import { useRoleGuard } from "@/lib/role";
 
 export const Route = createFileRoute("/skill-map")({
-  head: () => ({ meta: [{ title: "Skill Map — MindBloom AI" }, { name: "description", content: "Visual skill constellation map." }] }),
+  head: () => ({ meta: [{ title: "Skill Map — NexaQuest AI" }, { name: "description", content: "Visual skill constellation map." }] }),
   component: SkillMap,
 });
 

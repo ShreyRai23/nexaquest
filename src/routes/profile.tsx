@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { Camera, Save, User, Mail, Star, Zap, Shield, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "My Profile — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "My Profile — NexaQuest AI" }] }),
   component: ProfilePage,
 });
 

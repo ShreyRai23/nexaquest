@@ -36,7 +36,7 @@ export function ParentNavbar() {
             <span className="font-pixel text-[10px]">MB</span>
           </div>
           <div className="leading-tight hidden sm:block">
-            <div className="font-pixel text-[12px] text-[color:var(--sunny)]">MINDBLOOM</div>
+            <div className="font-pixel text-[12px] text-[color:var(--sunny)]">NEXAQUEST</div>
             <div className="text-[10px] text-[color:var(--teal-pop)]">● Parent Center</div>
           </div>
         </Link>

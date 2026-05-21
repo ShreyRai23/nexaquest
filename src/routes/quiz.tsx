@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/quiz")({
-  head: () => ({ meta: [{ title: "Quiz Arena — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "Quiz Arena — NexaQuest AI" }] }),
   component: QuizPage,
 });
 

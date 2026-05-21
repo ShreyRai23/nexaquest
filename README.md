@@ -1,8 +1,8 @@
-# 🌟 MindBloom AI — Gamified Learning Adventure
+# 🌟 NexaQuest AI — Gamified Learning Adventure
 
-![MindBloom AI](https://img.shields.io/badge/Status-Active-brightgreen) ![React](https://img.shields.io/badge/React-19.0-blue) ![Vite](https://img.shields.io/badge/Vite-7.3-purple) ![TanStack](https://img.shields.io/badge/TanStack_Router-1.0-red)
+![NexaQuest AI](https://img.shields.io/badge/Status-Active-brightgreen) ![React](https://img.shields.io/badge/React-19.0-blue) ![Vite](https://img.shields.io/badge/Vite-7.3-purple) ![TanStack](https://img.shields.io/badge/TanStack_Router-1.0-red)
 
-**MindBloom AI** is a next-generation, AI-powered aptitude and learning discovery platform built for children aged 8–16. It replaces boring traditional assessments with an interactive, gamified web experience full of daily missions, real-time AI mentoring, achievements, and pixel-art aesthetics.
+**NexaQuest AI** is a next-generation, AI-powered aptitude and learning discovery platform built for children aged 8–16. It replaces boring traditional assessments with an interactive, gamified web experience full of daily missions, real-time AI mentoring, achievements, and pixel-art aesthetics.
 
 ## ✨ Key Features
 - **🎮 Gamified UI:** Retro pixel-art styling, smooth micro-animations, and a responsive layout that looks great on any device.
@@ -26,8 +26,8 @@ Make sure you have [Node.js](https://nodejs.org/) (v18+) and npm installed.
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ShreyRai23/mindbloom-adventure.git
-   cd mindbloom-adventure
+   git clone https://github.com/ShreyRai23/nexaquest-adventure.git
+   cd nexaquest-adventure
    ```
 2. Install dependencies:
    ```bash
@@ -38,7 +38,7 @@ Make sure you have [Node.js](https://nodejs.org/) (v18+) and npm installed.
    ```bash
    cp .env.example .env
    ```
-   Ensure it contains the URL of your MindBloom Laravel backend:
+   Ensure it contains the URL of your NexaQuest Laravel backend:
    ```env
    VITE_API_URL=http://localhost:8000/api
    ```

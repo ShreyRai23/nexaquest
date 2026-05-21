@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/parent-progress")({
-  head: () => ({ meta: [{ title: "Child Progress — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "Child Progress — NexaQuest AI" }] }),
   component: ProgressPage,
   validateSearch: (s: Record<string, unknown>) => ({ childId: Number(s.childId ?? 0) }),
 });

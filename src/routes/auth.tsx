@@ -5,7 +5,7 @@ import { Mail, Lock, User, Sparkles, Baby, Users, AlertCircle } from "lucide-rea
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — MindBloom AI" }, { name: "description", content: "Enter the magical academy. Sign in or create your hero." }] }),
+  head: () => ({ meta: [{ title: "Sign in — NexaQuest AI" }, { name: "description", content: "Enter the magical academy. Sign in or create your hero." }] }),
   component: Auth,
 });
 
@@ -118,7 +118,7 @@ function Auth() {
             {mode === "up" && (
                 <Field icon={User} label="Full name" placeholder="e.g. Priya Mehta" value={name} onChange={(e: any) => setName(e.target.value)} required />
             )}
-            <Field icon={Mail} label="Email" placeholder="hero@mindbloom.ai" type="email" value={email} onChange={(e: any) => setEmail(e.target.value)} required />
+            <Field icon={Mail} label="Email" placeholder="hero@nexaquest.ai" type="email" value={email} onChange={(e: any) => setEmail(e.target.value)} required />
             <Field icon={Lock} label="Password" placeholder="••••••••" type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} required />
             <button type="submit" className="btn-game orange w-full" disabled={loading}>
               {loading ? (

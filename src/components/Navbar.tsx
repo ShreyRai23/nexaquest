@@ -11,7 +11,7 @@ export function Navbar() {
             <span className="font-pixel text-[10px]">MB</span>
           </div>
           <div className="leading-tight">
-            <div className="font-pixel text-[12px] text-[color:var(--sunny)]">MINDBLOOM</div>
+            <div className="font-pixel text-[12px] text-[color:var(--sunny)]">NEXAQUEST</div>
             <div className="text-[10px] text-[color:var(--teal-pop)]">● AI Adventure</div>
           </div>
         </Link>

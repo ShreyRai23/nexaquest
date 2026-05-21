@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/parent")({
-  head: () => ({ meta: [{ title: "Parent Dashboard — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "Parent Dashboard — NexaQuest AI" }] }),
   component: Parent,
 });
 
@@ -96,7 +96,7 @@ function Parent() {
                 <Field icon={Target} label="Age" type="number" min="5" max="20" placeholder="10" value={childForm.age} onChange={(e: any) => setChildForm({ ...childForm, age: e.target.value })} required />
               </div>
               <div className="font-pixel text-[9px] text-[color:var(--cherry)] mt-4 mb-1">CHILD'S LOGIN DETAILS</div>
-              <Field icon={Mail} label="Child's Login Email" type="email" placeholder="child@mindbloom.ai" value={childForm.email} onChange={(e: any) => setChildForm({ ...childForm, email: e.target.value })} required />
+              <Field icon={Mail} label="Child's Login Email" type="email" placeholder="child@nexaquest.ai" value={childForm.email} onChange={(e: any) => setChildForm({ ...childForm, email: e.target.value })} required />
               <Field icon={Lock} label="Child's Password" type="password" placeholder="••••••••" value={childForm.password} onChange={(e: any) => setChildForm({ ...childForm, password: e.target.value })} required />
               
               <button type="submit" className="btn-game orange w-full mt-4" disabled={addingChild}>

@@ -5,9 +5,9 @@ import { Sparkles, Brain, Compass, MessageCircleHeart, Trophy, BarChart3, Gamepa
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MindBloom AI — Discover Your Hidden Superpowers" },
+      { title: "NexaQuest AI — Discover Your Hidden Superpowers" },
       { name: "description", content: "Gamified AI aptitude discovery platform for kids 8–16. Quests, mini-games, AI mentor, parent insights." },
-      { property: "og:title", content: "MindBloom AI — Adventure begins here" },
+      { property: "og:title", content: "NexaQuest AI — Adventure begins here" },
       { property: "og:description", content: "Play games, level up, find your superpowers with AI." },
     ],
   }),
@@ -35,7 +35,7 @@ function Landing() {
                 <span className="inline-block bg-[color:var(--sunny)] px-3 py-1 border-4 border-[color:var(--ink)] rounded-xl shadow-[6px_6px_0_0_var(--ink)] mt-2">Hidden Superpowers</span>
               </h1>
               <p className="max-w-xl text-lg font-semibold text-[color:var(--ink)]/80">
-                ✨ Play. Quest. Grow. MindBloom AI is the magical world where kids ages 8–16 unlock their talents through games, missions and a friendly AI mentor.
+                ✨ Play. Quest. Grow. NexaQuest AI is the magical world where kids ages 8–16 unlock their talents through games, missions and a friendly AI mentor.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/dashboard" className="btn-game orange"><Rocket size={18}/> Start Adventure</Link>

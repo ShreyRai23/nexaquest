@@ -9,7 +9,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — MindBloom AI" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — NexaQuest AI" }] }),
   component: Dashboard,
 });
 
