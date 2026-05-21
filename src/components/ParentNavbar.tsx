@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 
 const items = [
-  { to: "/parent",   label: "Dashboard",     icon: LayoutDashboard },
-  { to: "/progress", label: "Child Progress", icon: BarChart3 },
-  { to: "/report",   label: "AI Reports",     icon: FileText },
+  { to: "/parent",          label: "Dashboard",      icon: LayoutDashboard },
+  { to: "/parent/progress", label: "Child Progress",  icon: BarChart3 },
+  { to: "/parent/report",   label: "AI Report",       icon: FileText },
 ] as const;
 
 export function ParentNavbar() {
@@ -44,7 +44,7 @@ export function ParentNavbar() {
         {/* Desktop nav links */}
         <ul className="hidden md:flex items-center gap-0.5 flex-1 justify-center">
           {items.map(({ to, label, icon: Icon }) => {
-            const active = loc.pathname === to;
+            const active = to === "/parent" ? loc.pathname === to : loc.pathname.startsWith(to);
             return (
               <li key={to}>
                 <Link
@@ -107,7 +107,7 @@ export function ParentNavbar() {
         >
           <ul className="flex flex-col gap-2">
             {items.map(({ to, label, icon: Icon }) => {
-              const active = loc.pathname === to;
+              const active = to === "/parent" ? loc.pathname === to : loc.pathname.startsWith(to);
               return (
                 <li key={to}>
                   <Link
