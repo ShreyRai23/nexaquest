@@ -65,32 +65,47 @@ function Auth() {
         <div className="pixel-card-flat bg-[color:var(--cream)] p-6 sm:p-8">
           <div className="flex gap-2">
             <button onClick={() => setMode("in")} className={`flex-1 btn-game ${mode === "in" ? "" : "ghost"}`}>Sign In</button>
-            <button onClick={() => setMode("up")} className={`flex-1 btn-game ${mode === "up" ? "teal" : "ghost"}`}>Create Hero</button>
+            <button onClick={() => { setMode("up"); setRole("parent"); }} className={`flex-1 btn-game ${mode === "up" ? "teal" : "ghost"}`}>Create Account</button>
           </div>
 
-          <div className="mt-5">
-            <div className="font-pixel text-[10px] text-[color:var(--cherry)]">PICK YOUR ROLE</div>
-            <div className="grid grid-cols-2 gap-3 mt-2">
-              <button 
-                onClick={() => setRole("child")} 
-                className="pixel-card p-4 text-left transition-colors"
-                style={{ backgroundColor: role === "child" ? "var(--sunny)" : "white" }}
-              >
-                <Baby size={22} />
-                <div className="font-black mt-2">Child</div>
-                <div className="text-xs">Ages 8–16 · Play &amp; learn</div>
-              </button>
-              <button 
-                onClick={() => setRole("parent")} 
-                className="pixel-card p-4 text-left transition-colors"
-                style={{ backgroundColor: role === "parent" ? "var(--teal-pop)" : "white" }}
-              >
-                <Users size={22} />
-                <div className="font-black mt-2">Parent</div>
-                <div className="text-xs">See progress &amp; insights</div>
-              </button>
+          {mode === "in" && (
+            <div className="mt-5">
+              <div className="font-pixel text-[10px] text-[color:var(--cherry)]">PICK YOUR ROLE</div>
+              <div className="grid grid-cols-2 gap-3 mt-2">
+                <button 
+                  type="button"
+                  onClick={() => setRole("child")} 
+                  className="pixel-card p-4 text-left transition-colors"
+                  style={{ backgroundColor: role === "child" ? "var(--sunny)" : "white" }}
+                >
+                  <Baby size={22} />
+                  <div className="font-black mt-2">Child</div>
+                  <div className="text-xs">Ages 8–16 · Play &amp; learn</div>
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setRole("parent")} 
+                  className="pixel-card p-4 text-left transition-colors"
+                  style={{ backgroundColor: role === "parent" ? "var(--teal-pop)" : "white" }}
+                >
+                  <Users size={22} />
+                  <div className="font-black mt-2">Parent</div>
+                  <div className="text-xs">See progress &amp; insights</div>
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+
+          {mode === "up" && (
+            <div className="mt-5 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 text-sm font-semibold text-blue-800">
+              <div className="flex gap-2 items-start">
+                <Users size={20} className="shrink-0 mt-0.5 text-blue-500" />
+                <div>
+                  Parents start here! Create your parent account first. You'll be able to create your child's hero profile inside the Parent Center.
+                </div>
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="mt-4 flex items-center gap-2 bg-red-50 border-2 border-red-400 rounded-xl px-3 py-2 text-red-700 text-sm font-semibold">
@@ -100,12 +115,7 @@ function Auth() {
 
           <form className="space-y-3 mt-5" onSubmit={enter}>
             {mode === "up" && (
-              <>
-                <Field icon={User} label="Full name" placeholder="e.g. Aarav Mehta" value={name} onChange={(e: any) => setName(e.target.value)} required />
-                {role === "child" && (
-                  <Field icon={User} label="Hero name (optional)" placeholder="e.g. PixelFox" value={heroName} onChange={(e: any) => setHeroName(e.target.value)} />
-                )}
-              </>
+                <Field icon={User} label="Full name" placeholder="e.g. Priya Mehta" value={name} onChange={(e: any) => setName(e.target.value)} required />
             )}
             <Field icon={Mail} label="Email" placeholder="hero@mindbloom.ai" type="email" value={email} onChange={(e: any) => setEmail(e.target.value)} required />
             <Field icon={Lock} label="Password" placeholder="••••••••" type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} required />
@@ -114,7 +124,7 @@ function Auth() {
                 <span className="flex items-center justify-center gap-2">⏳ {mode === "in" ? "Entering..." : "Creating..."}</span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
-                  <Sparkles size={16} /> {mode === "in" ? (role === "parent" ? "Enter Parent Center" : "Enter Academy") : (role === "parent" ? "Create Parent Account" : "Begin Adventure")}
+                  <Sparkles size={16} /> {mode === "in" ? (role === "parent" ? "Enter Parent Center" : "Enter Academy") : "Create Parent Account"}
                 </span>
               )}
             </button>

@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
 import { useEffect, useState } from "react";
-import { BarChart2, Award, Target, TrendingUp, FileText, Zap } from "lucide-react";
+import { BarChart2, Award, Target, TrendingUp, FileText, Zap, User, Mail, Lock, Sparkles, AlertCircle } from "lucide-react";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
@@ -16,6 +16,36 @@ function Parent() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedChild, setSelectedChild] = useState<any>(null);
+  const [childForm, setChildForm] = useState({ name: "", heroName: "", email: "", password: "", age: "" });
+  const [addingChild, setAddingChild] = useState(false);
+  const [addError, setAddError] = useState("");
+
+  const handleAddChild = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddError("");
+    setAddingChild(true);
+    try {
+      await api.post("/parent/children", {
+        name: childForm.name,
+        hero_name: childForm.heroName || childForm.name,
+        email: childForm.email,
+        password: childForm.password,
+        age: parseInt(childForm.age) || 10,
+      });
+      // reload dashboard
+      api.get("/parent/dashboard").then(r => {
+        setData(r.data);
+        if (r.data.children?.length > 0) setSelectedChild(r.data.children[0]);
+      });
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.response?.data?.errors
+        ? Object.values(err.response?.data?.errors || {}).flat().join(" ")
+        : "Failed to create child account.";
+      setAddError(msg as string);
+    } finally {
+      setAddingChild(false);
+    }
+  };
 
   useEffect(() => {
     if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
@@ -48,10 +78,31 @@ function Parent() {
         </div>
 
         {children.length === 0 && (
-          <div className="pixel-card-flat bg-[color:var(--cream)] p-10 text-center">
+          <div className="pixel-card-flat bg-[color:var(--cream)] p-6 sm:p-10 text-center max-w-xl mx-auto">
             <div className="text-5xl mb-4">👧</div>
-            <div className="font-pixel text-sm mb-2">No children linked yet!</div>
-            <div className="text-sm opacity-60">Ask your child to sign up — their progress will appear here automatically.</div>
+            <div className="font-pixel text-xl mb-2">Welcome to the Parent Center!</div>
+            <div className="text-sm font-semibold opacity-80 mb-6">Let's create your child's hero profile so they can start playing and learning.</div>
+            
+            {addError && (
+              <div className="mb-4 flex items-center gap-2 bg-red-50 border-2 border-red-400 rounded-xl px-3 py-2 text-red-700 text-sm font-semibold text-left">
+                <AlertCircle size={16} className="shrink-0" /> {addError}
+              </div>
+            )}
+
+            <form onSubmit={handleAddChild} className="space-y-3 text-left">
+              <Field icon={User} label="Child's Name" placeholder="e.g. Aarav Mehta" value={childForm.name} onChange={(e: any) => setChildForm({ ...childForm, name: e.target.value })} required />
+              <div className="grid grid-cols-2 gap-3">
+                <Field icon={User} label="Hero Name (Optional)" placeholder="e.g. PixelFox" value={childForm.heroName} onChange={(e: any) => setChildForm({ ...childForm, heroName: e.target.value })} />
+                <Field icon={Target} label="Age" type="number" min="5" max="20" placeholder="10" value={childForm.age} onChange={(e: any) => setChildForm({ ...childForm, age: e.target.value })} required />
+              </div>
+              <div className="font-pixel text-[9px] text-[color:var(--cherry)] mt-4 mb-1">CHILD'S LOGIN DETAILS</div>
+              <Field icon={Mail} label="Child's Login Email" type="email" placeholder="child@mindbloom.ai" value={childForm.email} onChange={(e: any) => setChildForm({ ...childForm, email: e.target.value })} required />
+              <Field icon={Lock} label="Child's Password" type="password" placeholder="••••••••" value={childForm.password} onChange={(e: any) => setChildForm({ ...childForm, password: e.target.value })} required />
+              
+              <button type="submit" className="btn-game orange w-full mt-4" disabled={addingChild}>
+                {addingChild ? "Creating..." : <><Sparkles size={16} /> Create Child Account</>}
+              </button>
+            </form>
           </div>
         )}
 
@@ -203,5 +254,17 @@ function StatCard({ emoji, value, label, color }: { emoji: string; value: any; l
       <div className="font-black text-lg leading-none mt-1">{value}</div>
       <div className="font-pixel text-[8px] opacity-60 mt-0.5">{label}</div>
     </div>
+  );
+}
+
+function Field({ icon: Icon, label, ...rest }: any) {
+  return (
+    <label className="block">
+      <span className="font-pixel text-[9px] text-[color:var(--ink)]/70">{label.toUpperCase()}</span>
+      <div className="mt-1 flex items-center gap-2 rounded-xl border-4 border-[color:var(--ink)] bg-white px-3 py-2 shadow-[3px_3px_0_0_var(--ink)] focus-within:-translate-y-0.5 transition">
+        <Icon size={16} className="text-[color:var(--ink)]/60" />
+        <input {...rest} className="flex-1 outline-none font-semibold bg-transparent" />
+      </div>
+    </label>
   );
 }
