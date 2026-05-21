@@ -6,7 +6,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/parent/progress")({
+export const Route = createFileRoute("/parent-progress")({
   head: () => ({ meta: [{ title: "Child Progress — MindBloom AI" }] }),
   component: ProgressPage,
   validateSearch: (s: Record<string, unknown>) => ({ childId: Number(s.childId ?? 0) }),

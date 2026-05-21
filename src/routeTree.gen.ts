@@ -16,6 +16,8 @@ import { Route as ReportRouteImport } from './routes/report'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ParentReportRouteImport } from './routes/parent-report'
+import { Route as ParentProgressRouteImport } from './routes/parent-progress'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MentorRouteImport } from './routes/mentor'
@@ -24,8 +26,6 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ParentReportRouteImport } from './routes/parent.report'
-import { Route as ParentProgressRouteImport } from './routes/parent.progress'
 
 const SkillMapRoute = SkillMapRouteImport.update({
   id: '/skill-map',
@@ -60,6 +60,16 @@ const ProgressRoute = ProgressRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentReportRoute = ParentReportRouteImport.update({
+  id: '/parent-report',
+  path: '/parent-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentProgressRoute = ParentProgressRouteImport.update({
+  id: '/parent-progress',
+  path: '/parent-progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentRoute = ParentRouteImport.update({
@@ -102,16 +112,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ParentReportRoute = ParentReportRouteImport.update({
-  id: '/report',
-  path: '/report',
-  getParentRoute: () => ParentRoute,
-} as any)
-const ParentProgressRoute = ParentProgressRouteImport.update({
-  id: '/progress',
-  path: '/progress',
-  getParentRoute: () => ParentRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -121,7 +121,9 @@ export interface FileRoutesByFullPath {
   '/games': typeof GamesRoute
   '/mentor': typeof MentorRoute
   '/missions': typeof MissionsRoute
-  '/parent': typeof ParentRouteWithChildren
+  '/parent': typeof ParentRoute
+  '/parent-progress': typeof ParentProgressRoute
+  '/parent-report': typeof ParentReportRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
@@ -129,8 +131,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skill-map': typeof SkillMapRoute
-  '/parent/progress': typeof ParentProgressRoute
-  '/parent/report': typeof ParentReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -140,7 +140,9 @@ export interface FileRoutesByTo {
   '/games': typeof GamesRoute
   '/mentor': typeof MentorRoute
   '/missions': typeof MissionsRoute
-  '/parent': typeof ParentRouteWithChildren
+  '/parent': typeof ParentRoute
+  '/parent-progress': typeof ParentProgressRoute
+  '/parent-report': typeof ParentReportRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
@@ -148,8 +150,6 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skill-map': typeof SkillMapRoute
-  '/parent/progress': typeof ParentProgressRoute
-  '/parent/report': typeof ParentReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -160,7 +160,9 @@ export interface FileRoutesById {
   '/games': typeof GamesRoute
   '/mentor': typeof MentorRoute
   '/missions': typeof MissionsRoute
-  '/parent': typeof ParentRouteWithChildren
+  '/parent': typeof ParentRoute
+  '/parent-progress': typeof ParentProgressRoute
+  '/parent-report': typeof ParentReportRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
@@ -168,8 +170,6 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skill-map': typeof SkillMapRoute
-  '/parent/progress': typeof ParentProgressRoute
-  '/parent/report': typeof ParentReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -182,6 +182,8 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/missions'
     | '/parent'
+    | '/parent-progress'
+    | '/parent-report'
     | '/profile'
     | '/progress'
     | '/quiz'
@@ -189,8 +191,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/skill-map'
-    | '/parent/progress'
-    | '/parent/report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -201,6 +201,8 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/missions'
     | '/parent'
+    | '/parent-progress'
+    | '/parent-report'
     | '/profile'
     | '/progress'
     | '/quiz'
@@ -208,8 +210,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/skill-map'
-    | '/parent/progress'
-    | '/parent/report'
   id:
     | '__root__'
     | '/'
@@ -220,6 +220,8 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/missions'
     | '/parent'
+    | '/parent-progress'
+    | '/parent-report'
     | '/profile'
     | '/progress'
     | '/quiz'
@@ -227,8 +229,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/skill-map'
-    | '/parent/progress'
-    | '/parent/report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -239,7 +239,9 @@ export interface RootRouteChildren {
   GamesRoute: typeof GamesRoute
   MentorRoute: typeof MentorRoute
   MissionsRoute: typeof MissionsRoute
-  ParentRoute: typeof ParentRouteWithChildren
+  ParentRoute: typeof ParentRoute
+  ParentProgressRoute: typeof ParentProgressRoute
+  ParentReportRoute: typeof ParentReportRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   QuizRoute: typeof QuizRoute
@@ -300,6 +302,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parent-report': {
+      id: '/parent-report'
+      path: '/parent-report'
+      fullPath: '/parent-report'
+      preLoaderRoute: typeof ParentReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent-progress': {
+      id: '/parent-progress'
+      path: '/parent-progress'
+      fullPath: '/parent-progress'
+      preLoaderRoute: typeof ParentProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/parent': {
       id: '/parent'
       path: '/parent'
@@ -356,35 +372,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/parent/report': {
-      id: '/parent/report'
-      path: '/report'
-      fullPath: '/parent/report'
-      preLoaderRoute: typeof ParentReportRouteImport
-      parentRoute: typeof ParentRoute
-    }
-    '/parent/progress': {
-      id: '/parent/progress'
-      path: '/progress'
-      fullPath: '/parent/progress'
-      preLoaderRoute: typeof ParentProgressRouteImport
-      parentRoute: typeof ParentRoute
-    }
   }
 }
-
-interface ParentRouteChildren {
-  ParentProgressRoute: typeof ParentProgressRoute
-  ParentReportRoute: typeof ParentReportRoute
-}
-
-const ParentRouteChildren: ParentRouteChildren = {
-  ParentProgressRoute: ParentProgressRoute,
-  ParentReportRoute: ParentReportRoute,
-}
-
-const ParentRouteWithChildren =
-  ParentRoute._addFileChildren(ParentRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -394,7 +383,9 @@ const rootRouteChildren: RootRouteChildren = {
   GamesRoute: GamesRoute,
   MentorRoute: MentorRoute,
   MissionsRoute: MissionsRoute,
-  ParentRoute: ParentRouteWithChildren,
+  ParentRoute: ParentRoute,
+  ParentProgressRoute: ParentProgressRoute,
+  ParentReportRoute: ParentReportRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   QuizRoute: QuizRoute,

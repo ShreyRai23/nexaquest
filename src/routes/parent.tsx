@@ -95,7 +95,7 @@ function Parent() {
 
             {/* Quick nav to detail pages */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link to="/parent/progress" search={{ childId: selectedChild.id }}
+              <Link to="/parent-progress" search={{ childId: selectedChild.id }}
                 className="pixel-card-flat bg-[color:var(--cream)] p-5 flex items-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer group">
                 <div className="text-4xl p-3 rounded-2xl border-4 border-[color:var(--ink)] bg-[color:var(--teal-pop)]/20 group-hover:scale-110 transition-transform">
                   <BarChart2 size={28} />
@@ -106,7 +106,7 @@ function Parent() {
                 </div>
               </Link>
 
-              <Link to="/parent/report" search={{ childId: selectedChild.id }}
+              <Link to="/parent-report" search={{ childId: selectedChild.id }}
                 className="pixel-card-flat bg-[color:var(--cream)] p-5 flex items-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer group">
                 <div className="text-4xl p-3 rounded-2xl border-4 border-[color:var(--ink)] bg-[color:var(--sunny)]/30 group-hover:scale-110 transition-transform">
                   <FileText size={28} />

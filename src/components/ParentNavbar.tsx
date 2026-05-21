@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 
 const items = [
-  { to: "/parent",          label: "Dashboard",      icon: LayoutDashboard },
-  { to: "/parent/progress", label: "Child Progress",  icon: BarChart3 },
-  { to: "/parent/report",   label: "AI Report",       icon: FileText },
+  { to: "/parent",           label: "Dashboard",      icon: LayoutDashboard },
+  { to: "/parent-progress",  label: "Child Progress",  icon: BarChart3 },
+  { to: "/parent-report",    label: "AI Report",       icon: FileText },
 ] as const;
 
 export function ParentNavbar() {

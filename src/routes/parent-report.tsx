@@ -5,11 +5,12 @@ import { ArrowLeft, Loader2, Download, RefreshCw, Brain, Sparkles } from "lucide
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/parent/report")({
+export const Route = createFileRoute("/parent-report")({
   head: () => ({ meta: [{ title: "AI Report — MindBloom AI" }] }),
   component: ReportPage,
   validateSearch: (s: Record<string, unknown>) => ({ childId: Number(s.childId ?? 0) }),
 });
+
 
 function ReportPage() {
   const { isAuthenticated, user } = useAuth();
