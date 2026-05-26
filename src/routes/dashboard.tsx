@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { RoleNavbar } from "@/components/RoleNavbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Zap, Trophy, Flame, Star, TrendingUp, BookOpen, Target, Cpu } from "lucide-react";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip,
@@ -26,11 +26,29 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const fetchDashboard = () => {
+    api.get("/dashboard").then(r => { setData(r.data); setLoading(false); })
+      .catch(e => { setError(e.response?.data?.message || "Failed to load dashboard"); setLoading(false); });
+  };
+
   useEffect(() => {
     if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
     if (user?.role === "parent") { navigate({ to: "/parent" }); return; }
-    api.get("/dashboard").then(r => { setData(r.data); setLoading(false); })
-      .catch(e => { setError(e.response?.data?.message || "Failed to load dashboard"); setLoading(false); });
+    fetchDashboard();
+
+    // Refresh whenever the user tabs back to this page (e.g. after finishing a quiz)
+    const onVisible = () => { if (document.visibilityState === "visible") fetchDashboard(); };
+    document.addEventListener("visibilitychange", onVisible);
+
+    // Also refresh every 30 seconds while the dashboard is open
+    intervalRef.current = setInterval(fetchDashboard, 30_000);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [isAuthenticated, user]);
 
   if (loading) return <LoadingScreen />;

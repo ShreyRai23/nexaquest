@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/SiteShell";
-import { Sparkles, Brain, Compass, MessageCircleHeart, Trophy, BarChart3, Gamepad2, Puzzle, Lightbulb, Palette, Star, Rocket, Cloud, Map } from "lucide-react";
+import { Sparkles, Brain, Compass, MessageCircleHeart, Trophy, BarChart3, Star, Rocket, Cloud, Map, Zap, Palette, FlaskConical, Users, BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,12 +39,12 @@ function Landing() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/dashboard" className="btn-game orange"><Rocket size={18}/> Start Adventure</Link>
-                <Link to="/games" className="btn-game ghost"><Gamepad2 size={18}/> Explore Games</Link>
+                <Link to="/quiz" className="btn-game ghost"><BookOpen size={18}/> Explore Quizzes</Link>
               </div>
               <div className="flex flex-wrap items-center gap-4 pt-2 text-sm">
                 <div className="tag"><Star size={12} fill="currentColor" className="text-orange-500"/> 4.9 from 12k families</div>
                 <div className="tag">🛡 Kid-safe AI</div>
-                <div className="tag">🎮 200+ quests</div>
+                <div className="tag">🎯 200+ quizzes</div>
               </div>
             </div>
 
@@ -114,7 +114,7 @@ function Landing() {
           <ol className="grid gap-6 md:grid-cols-4 relative">
             {[
               {n:1, t:"Create Character", d:"Pick a hero & avatar.", e:"🧒"},
-              {n:2, t:"Play Skill Games", d:"Quests across 5 worlds.", e:"🎮"},
+              {n:2, t:"Take Skill Quizzes", d:"Quizzes across 5 categories.", e:"📝"},
               {n:3, t:"Unlock AI Insights", d:"AI maps your strengths.", e:"🤖"},
               {n:4, t:"Discover Talents", d:"Career paths revealed.", e:"🌟"},
             ].map((s) => (
@@ -129,26 +129,37 @@ function Landing() {
         </div>
       </section>
 
-      {/* GAMES PREVIEW */}
+      {/* INTERACTIVE QUIZZES */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 mt-20">
         <div className="flex items-end justify-between gap-4">
-          <SectionTitle eyebrow="MINI GAMES" title="Featured arcade quests"/>
-          <Link to="/games" className="btn-game teal hidden sm:inline-flex">Browse all</Link>
+          <SectionTitle eyebrow="INTERACTIVE QUIZZES" title="Featured quiz adventures"/>
+          <Link to="/quiz" className="btn-game teal hidden sm:inline-flex">Browse all</Link>
         </div>
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            {t:"Logic Lava", e:"🧠", c:"var(--orange-pop)", xp:120, i:Lightbulb},
-            {t:"Memory Reef", e:"🐙", c:"var(--teal-pop)", xp:80, i:Puzzle},
-            {t:"Word Wizard", e:"🪄", c:"var(--sunny)", xp:140, i:Sparkles},
-            {t:"Pixel Painter", e:"🎨", c:"var(--cherry)", xp:200, i:Palette},
-          ].map((g) => (
-            <div key={g.t} className="pixel-card p-4">
-              <div className="aspect-[4/3] rounded-xl border-4 border-[color:var(--ink)] grid place-items-center text-6xl shadow-inner" style={{background: g.c}}>{g.e}</div>
-              <div className="mt-3 flex items-center justify-between">
-                <h4 className="font-black">{g.t}</h4>
-                <span className="tag bg-[color:var(--sunny)]">+{g.xp} XP</span>
+            {t:"Logic & Reasoning", e:"🧠", c:"var(--sky-pop)", xp:150, qs:10, diff:"Medium", cat:"Logic", Icon:Brain},
+            {t:"Creative Thinking", e:"🎨", c:"var(--orange-pop)", xp:120, qs:8, diff:"Easy", cat:"Creativity", Icon:Palette},
+            {t:"Memory Challenge", e:"🧩", c:"var(--grass)", xp:100, qs:10, diff:"Easy", cat:"Memory", Icon:Zap},
+            {t:"Communication Quest", e:"🗣️", c:"var(--cherry)", xp:130, qs:8, diff:"Medium", cat:"Communication", Icon:Users},
+            {t:"Science Explorer", e:"🚀", c:"var(--teal-pop)", xp:200, qs:12, diff:"Hard", cat:"Science", Icon:FlaskConical},
+            {t:"Leadership Lab", e:"⭐", c:"var(--sunny)", xp:180, qs:10, diff:"Hard", cat:"Leadership", Icon:BookOpen},
+          ].map((q) => (
+            <div key={q.t} className="pixel-card p-4 hover:-translate-y-1 transition-transform">
+              <div className="aspect-[16/9] rounded-xl border-4 border-[color:var(--ink)] grid place-items-center shadow-inner relative overflow-hidden" style={{background: q.c}}>
+                <span className="text-6xl">{q.e}</span>
+                <div className="absolute top-2 right-2">
+                  <span className={`text-[10px] font-pixel px-2 py-0.5 rounded-full border-2 border-[color:var(--ink)] bg-white ${q.diff === "Easy" ? "text-green-700" : q.diff === "Medium" ? "text-yellow-700" : "text-red-700"}`}>{q.diff}</span>
+                </div>
+                <div className="absolute bottom-2 left-2">
+                  <span className="text-[10px] font-pixel px-2 py-0.5 rounded-full border-2 border-[color:var(--ink)] bg-white text-purple-700">{q.cat}</span>
+                </div>
               </div>
-              <Link to="/quiz" className="btn-game w-full mt-3">Play <g.i size={16}/></Link>
+              <div className="mt-3 flex items-center justify-between">
+                <h4 className="font-black">{q.t}</h4>
+                <span className="tag bg-[color:var(--sunny)]">+{q.xp} XP</span>
+              </div>
+              <div className="mt-1 text-xs text-[color:var(--ink)]/60 font-semibold">{q.qs} questions · AI-generated</div>
+              <Link to="/quiz" className="btn-game w-full mt-3">Start Quiz <q.Icon size={16}/></Link>
             </div>
           ))}
         </div>

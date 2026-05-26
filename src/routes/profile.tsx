@@ -28,17 +28,28 @@ function ProfilePage() {
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // On mount: check auth and always fetch fresh user data from the API.
+  // This prevents stale cached URLs (from localStorage) from being used.
   useEffect(() => {
     if (!isAuthenticated) { navigate({ to: "/auth" }); return; }
+    refreshUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
+
+  // Sync form fields whenever the user object is updated (e.g. after refreshUser)
+  useEffect(() => {
     if (user) {
       setName(user.name || "");
       setHeroName(user.profile?.hero_name || "");
       setAge(user.profile?.age ? String(user.profile.age) : "");
       setGrade((user.profile as any)?.grade || "");
       setAvatarEmoji(user.avatar_emoji || "🦊");
-      if (user.profile_image_url) setImagePreview(user.profile_image_url);
+      // Only set imagePreview from the URL when no local file is staged
+      if (user.profile_image_url && !imageFile) {
+        setImagePreview(user.profile_image_url);
+      }
     }
-  }, [isAuthenticated, user]);
+  }, [user]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -66,9 +77,16 @@ function ProfilePage() {
       }
       if (imageFile) form.append("profile_image", imageFile);
 
-      await api.post("/profile", form, {
+      const res = await api.post("/profile", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      // Immediately apply the returned profile_image_url so the preview
+      // doesn't briefly disappear while refreshUser() is in-flight
+      if (res.data.user?.profile_image_url) {
+        setImagePreview(res.data.user.profile_image_url);
+      }
+
       await refreshUser();
       setSuccess(true);
       setImageFile(null);
